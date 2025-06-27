@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="shuffle-for-bootstrap.png">
+</head>
+<body>
+    <div>
+        <section class="position-relative pt-20 pt-md-0 bg-white overflow-hidden" style="background-image: url('flex-assets/elements/pattern-light.png')">
+            <div class="position-absolute top-0 start-0 h-100 w-100" style="background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);"></div>
+            <div class="position-relative row align-items-center g-16" style="z-index:1;">
+                <div class="col-12 col-xl-6">
+                    <div class="mb-7 px-4 text-center mw-md mx-auto">
+                        <div class="mb-6 d-flex align-items-center justify-content-center mx-auto bg-success rounded-3" style="width: 64px; height: 64px;">
+                            <img class="img-fluid" style="height: 40px;" src="images/bricon2.png" alt="">
+                        </div>
+                        <h2 class="font-heading mb-4 fs-7">Sign in to your account</h2>
+                        <p class="mb-0 fs-9 fw-medium text-secondary">Unlock opportunities—log in to begin.</p>
+                    </div>
+                    <form class="px-4 mw-sm mx-auto" id="loginForm">
+                        <div class="mb-4 row g-6">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="mb-1 fw-medium text-light-dark" for="email">Email</label>
+                                    <input class="form-control text-secondary-dark shadow" id="email" type="email" placeholder="Email" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="mb-1 fw-medium text-light-dark" for="password">Password</label>
+                                    <input class="form-control text-secondary-dark shadow" id="password" type="password" placeholder="Password" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-6 row align-items-center justify-content-between g-2">
+                            <div class="col-auto">
+                                <div class="form-check">
+                                    <input class="form-check-input shadow" id="rememberMe" type="checkbox" value="">
+                                    <label class="form-check-label fs-13 fw-medium text-light-dark" for="rememberMe">Remember me</label>
+                                </div>
+                            </div>
+                            <div class="col-auto"><a class="fs-13 fw-medium text-success link-success" href="#">Forgot your password?</a></div>
+                        </div>
+                        <div class="mb-6 row">
+                            <div class="col-12">
+                                <button class="btn btn-lg btn-success fs-11 py-3 w-100 text-success-light shadow" type="submit">Sign In</button>
+                            </div>
+                        </div>
+                        <p class="mb-0 fs-13 fw-medium text-light-dark text-center">
+                            <span>Don’t have an account?</span>
+                            <a class="text-success link-success" href="sign-up-filter.html">Sign up</a>
+                        </p>
+                    </form>
+                </div>
+                <div class="col-12 col-xl-6">
+                    <img class="img-fluid w-100" src="images/signin.jpg" alt="">
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="js/bootstrap/bootstrap.bundle.min.js"></script>
+
+
+
+
+
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById("email").value.trim().toLowerCase();
+            const password = document.getElementById("password").value.trim();
+
+            Promise.all([
+                fetch("http://localhost:5027/api/Donors").then(res => res.json()),
+                fetch("http://localhost:5027/api/Students").then(res => res.json())
+            ]).then(([donors, students]) => {
+                // Check Donors first
+                let user = donors.find(
+                    donor =>
+                        donor?.email?.toLowerCase() === email &&
+                        donor?.password === password
+                );
+
+                if (user) {
+                    // Store Donor user details with role and donorId
+                    localStorage.setItem(
+                        "currentUser",
+                        JSON.stringify({
+                            firstName: user.firstName,
+                            lastName: user.lastName,
+                            email: user.email,
+                            role: "Donor",
+                            id: user.donorId, // Correctly store donorId
+                        })
+                    );
+                    alert(`Welcome, ${user.firstName}!`);
+                    window.location.href = "index.html";
+                    return;
+                }
+
+                // Check Students if no match in Donors
+                user = students.find(
+                    student =>
+                        student?.email?.toLowerCase() === email &&
+                        student?.password === password
+                );
+
+                if (user) {
+                    // Store Student user details with role and studentId
+                    localStorage.setItem(
+                        "currentUser",
+                        JSON.stringify({
+                            firstName: user.firstName,
+                            lastName: user.lastName,
+                            email: user.email,
+                            role: "Student",
+                            id: user.id, // Correctly store studentId
+                        })
+                    );
+                    alert(`Welcome, ${user.firstName}!`);
+                    window.location.href = "index.html";
+                } else {
+                    alert("Invalid email or password. Please try again.");
+                }
+            }).catch(err => {
+                console.error("Error during login:", err);
+                alert("An error occurred. Please try again later.");
+            });
+        });
+
+
+
+    </script>
+
+
+
+</body>
+</html>

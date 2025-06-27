@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Choose Your Role</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="shuffle-for-bootstrap.png">
+</head>
+<body>
+    <div>
+        <section class="position-relative pt-20 pt-md-0 bg-white overflow-hidden bs-section-dragged" style="background-image: url('flex-assets/elements/pattern-light.png')">
+            <div class="position-absolute top-0 start-0 h-100 w-100" style="background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);"></div>
+            <div class="position-relative row align-items-center g-16" style="z-index:1;">
+                <div class="col-12 col-xl-6">
+                    <div class="mb-7 px-4 text-center mw-md mx-auto">
+                        <div class="mb-6 d-flex align-items-center justify-content-center mx-auto bg-success rounded-3" style="width: 64px; height: 64px;">
+                            <img class="img-fluid" style="height: 40px;" src="images/bricon2.png" alt="Brand Icon">
+                        </div>
+                        <h2 class="font-heading mb-4 fs-7">Choose your role to get started</h2>
+                        <p class="mb-0 fs-9 fw-medium text-secondary">
+                            Select your account type to begin your journey—whether you're here to sponsor or start a fundraiser.
+                        </p>
+                    </div>
+                    <form class="px-4 mw-sm mx-auto" id="roleForm">
+                        <div class="mb-4 row g-6">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="form-label" for="accountType">Account Type</label>
+                                    <select class="form-select" name="accountType" id="accountType" required>
+                                        <option value="" disabled selected>Select an option</option>
+                                        <option value="Donor">Donor</option>
+                                        <option value="Student">Student</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-6 row">
+                            <div class="col-12">
+                                <button class="btn btn-lg btn-success fs-11 py-3 w-100 text-success-light shadow" type="submit">Sign Up</button>
+                            </div>
+                        </div>
+                        <p class="mb-0 fs-13 fw-medium text-light-dark text-center">
+                            <span>Already have an account?</span>
+                            <a class="text-success link-success" href="#">Log in</a>
+                        </p>
+                    </form>
+                </div>
+                <div class="col-12 col-xl-6">
+                    <img class="img-fluid w-100" src="images/signin.jpg" alt="Sign In Illustration">
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script>
+        // Handle form submission
+        document.getElementById("roleForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const accountType = document.getElementById("accountType").value;
+
+            if (accountType === "Donor") {
+                window.location.href = "sign-up-page-donor.html";
+            } else if (accountType === "Student") {
+                window.location.href = "sign-up-page-student.html";
+            } else {
+                alert("Please select a valid account type.");
+            }
+        });
+    </script>
+</body>
+</html>

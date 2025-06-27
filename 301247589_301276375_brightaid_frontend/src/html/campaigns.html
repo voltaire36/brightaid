@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Page title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="shuffle-for-bootstrap.png">
+</head>
+<body>
+
+
+
+
+
+    <script>
+
+
+
+
+
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const navbarPlaceholder = document.getElementById("navbar-placeholder");
+
+            // Fetch and load the navbar
+            fetch("navbar.html")
+                .then(response => response.text())
+                .then(html => {
+                    navbarPlaceholder.innerHTML = html;
+
+                    // Initialize navbar links after loading
+                    const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+                    const loginLink = document.getElementById("loginLink");
+                    const signUpLink = document.getElementById("signUpLink");
+                    const dashboardLink = document.getElementById("dashboardLink");
+
+                    if (currentUser.email) {
+                        loginLink.textContent = `Welcome, ${currentUser.firstName?.trim() || currentUser.email || "User"}`;
+                        loginLink.href = "#";
+                        signUpLink.textContent = "Log Out";
+                        signUpLink.href = "#";
+                        signUpLink.onclick = () => {
+                            localStorage.removeItem("currentUser");
+                            window.location.href = "sign-in-page.html";
+                        };
+
+                        dashboardLink.href =
+                            currentUser.role === "Donor"
+                                ? "dashboard-donor.html"
+                                : "dashboard-student.html";
+                    }
+                })
+                .catch(error => {
+                    console.error("Failed to load navbar:", error);
+                });
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const campaignsContainer = document.querySelector(".row.g-8");
+
+            fetch("http://localhost:5027/api/Students")
+                .then(response => response.json())
+                .then(data => {
+                    campaignsContainer.innerHTML = ""; // Clear static content
+
+                    data.forEach((student, index) => {
+                        const campaignHTML = `
+                        <div class="col-12 col-lg-6">
+                            <div class="row g-8">
+                                <div class="col-auto">
+                                    <img class="img-fluid" src="flex-assets/images/blog/news${(index % 6) + 1}-vertical.png" alt="Student Image">
+                                </div>
+                                <div class="col">
+                                    <div class="d-flex flex-column justify-content-between mw-lg-xs h-100">
+                                        <a class="d-inline-block mb-8" href="#">
+                                            <h3 class="font-heading mb-0 fs-7 text-light-dark link-light-dark">${student.fullName}</h3>
+                                        </a>
+                                        <a class="d-inline-flex align-items-center text-success link-success read-campaign-link" data-id="${student.id}">
+                                            <span class="me-2 fw-semibold fs-10">Read Campaign</span>
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M11.9467 7.74665C11.9149 7.66481 11.8674 7.59005 11.8067 7.52665L8.47333 4.19331C8.41117 4.13116 8.33738 4.08185 8.25617 4.04821C8.17495 4.01457 8.08791 3.99725 8 3.99725C7.82246 3.99725 7.6522 4.06778 7.52667 4.19331C7.46451 4.25547 7.4152 4.32927 7.38156 4.41048C7.34792 4.4917 7.33061 4.57874 7.33061 4.66665C7.33061 4.84418 7.40113 5.01445 7.52667 5.13998L9.72667 7.33331H4.66667C4.48986 7.33331 4.32029 7.40355 4.19526 7.52858C4.07024 7.6536 4 7.82317 4 7.99998C4 8.17679 4.07024 8.34636 4.19526 8.47139C4.32029 8.59641 4.48986 8.66665 4.66667 8.66665H9.72667L7.52667 10.86C7.46418 10.922 7.41458 10.9957 7.38074 11.0769C7.34689 11.1582 7.32947 11.2453 7.32947 11.3333C7.32947 11.4213 7.34689 11.5085 7.38074 11.5897C7.41458 11.6709 7.46418 11.7447 7.52667 11.8066C7.58864 11.8691 7.66238 11.9187 7.74361 11.9526C7.82485 11.9864 7.91199 12.0038 8 12.0038C8.08801 12.0038 8.17514 11.9864 8.25638 11.9526C8.33762 11.9187 8.41136 11.8691 8.47333 11.8066L11.8067 8.47331C11.8674 8.40991 11.9149 8.33515 11.9467 8.25331C12.0133 8.09101 12.0133 7.90895 11.9467 7.74665Z" fill="currentColor"></path>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                        campaignsContainer.insertAdjacentHTML("beforeend", campaignHTML);
+                    });
+
+                    // Bind click event to dynamically created links
+                    const campaignLinks = document.querySelectorAll(".read-campaign-link");
+                    campaignLinks.forEach(link => {
+                        link.addEventListener("click", event => {
+                            const studentId = event.currentTarget.getAttribute("data-id");
+                            window.location.href = `campaign-page.html?id=${studentId}`;
+                        });
+                    });
+                })
+                .catch(error => console.error("Error fetching student data:", error));
+        });
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+    <div class="">
+
+        <div>
+
+
+
+
+            <!-- Navbar Partial -->
+            <div id="navbar-placeholder"></div>
+            <!-- Navbar Partial -->
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+        <section class="position-relative py-20 bg-white overflow-hidden" style="background-image: url('flex-assets/elements/pattern-light.png')">
+            <div class="position-absolute top-0 start-0 h-100 w-100" style="background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);"></div>
+            <div class="position-relative container" style="z-index:1;">
+                <div class="mb-16 mw-md-5xl">
+
+                    <h2 class="font-heading mb-4 fs-5" style="letter-spacing: -1px;">Browse Campaigns</h2>
+                    <p class="mb-0 fs-9 fw-medium text-secondary">
+                        Discover meaningful fundraisers dedicated to empowering international students in Canada, and make a lasting impact with every contribution.
+                    </p>
+                </div>
+                <ul class="mb-8 nav nav-pills">
+                    <li class="nav-item active">
+                    </li>
+                    <li class="nav-item">
+                    </li>
+                    <li class="nav-item">
+                    </li>
+                    <li class="nav-item">
+                    </li>
+                    <li class="nav-item">
+                    </li>
+                </ul>
+
+
+
+
+
+
+
+
+                <div class="mb-16 row g-8">
+                    <div class="col-12 col-lg-6">
+                        <div class="row g-8">
+                            <div class="col-auto">
+                                <img class="img-fluid" src="flex-assets/images/blog/news-vertical.png" alt="">
+                            </div>
+                            <div class="col">
+                                <div class="d-flex flex-column justify-content-between mw-lg-xs h-100">
+                                    <a class="d-inline-block mb-8" href="#">
+                                        <h3 class="font-heading mb-0 fs-7 text-light-dark link-light-dark">Student Name</h3>
+                                    </a>
+                                    <a class="d-inline-flex align-items-center text-success link-success" href="#">
+                                        <span class="me-2 fw-semibold fs-10">Read Campaign</span>
+                                        <svg width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11.9467 7.74665C11.9149 7.66481 11.8674 7.59005 11.8067 7.52665L8.47333 4.19331C8.41117 4.13116 8.33738 4.08185 8.25617 4.04821C8.17495 4.01457 8.08791 3.99725 8 3.99725C7.82246 3.99725 7.6522 4.06778 7.52667 4.19331C7.46451 4.25547 7.4152 4.32927 7.38156 4.41048C7.34792 4.4917 7.33061 4.57874 7.33061 4.66665C7.33061 4.84418 7.40113 5.01445 7.52667 5.13998L9.72667 7.33331H4.66667C4.48986 7.33331 4.32029 7.40355 4.19526 7.52858C4.07024 7.6536 4 7.82317 4 7.99998C4 8.17679 4.07024 8.34636 4.19526 8.47139C4.32029 8.59641 4.48986 8.66665 4.66667 8.66665H9.72667L7.52667 10.86C7.46418 10.922 7.41458 10.9957 7.38074 11.0769C7.34689 11.1582 7.32947 11.2453 7.32947 11.3333C7.32947 11.4213 7.34689 11.5085 7.38074 11.5897C7.41458 11.6709 7.46418 11.7447 7.52667 11.8066C7.58864 11.8691 7.66238 11.9187 7.74361 11.9526C7.82485 11.9864 7.91199 12.0038 8 12.0038C8.08801 12.0038 8.17514 11.9864 8.25638 11.9526C8.33762 11.9187 8.41136 11.8691 8.47333 11.8066L11.8067 8.47331C11.8674 8.40991 11.9149 8.33515 11.9467 8.25331C12.0133 8.09101 12.0133 7.90895 11.9467 7.74665Z" fill="currentColor"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="row g-8">
+                            <div class="col-auto">
+                                <img class="img-fluid" src="flex-assets/images/blog/news2-vertical.png" alt="">
+                            </div>
+                            <div class="col">
+                                <div class="d-flex flex-column justify-content-between mw-lg-xs h-100">
+                                    <a class="d-inline-block mb-8" href="#">
+                                        <h3 class="font-heading mb-0 fs-7 text-light-dark link-light-dark">Student Name</h3>
+                                    </a>
+                                    <a class="d-inline-flex align-items-center text-success link-success" href="#">
+                                        <span class="me-2 fw-semibold fs-10">Read Campaign</span>
+                                        <svg width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11.9467 7.74665C11.9149 7.66481 11.8674 7.59005 11.8067 7.52665L8.47333 4.19331C8.41117 4.13116 8.33738 4.08185 8.25617 4.04821C8.17495 4.01457 8.08791 3.99725 8 3.99725C7.82246 3.99725 7.6522 4.06778 7.52667 4.19331C7.46451 4.25547 7.4152 4.32927 7.38156 4.41048C7.34792 4.4917 7.33061 4.57874 7.33061 4.66665C7.33061 4.84418 7.40113 5.01445 7.52667 5.13998L9.72667 7.33331H4.66667C4.48986 7.33331 4.32029 7.40355 4.19526 7.52858C4.07024 7.6536 4 7.82317 4 7.99998C4 8.17679 4.07024 8.34636 4.19526 8.47139C4.32029 8.59641 4.48986 8.66665 4.66667 8.66665H9.72667L7.52667 10.86C7.46418 10.922 7.41458 10.9957 7.38074 11.0769C7.34689 11.1582 7.32947 11.2453 7.32947 11.3333C7.32947 11.4213 7.34689 11.5085 7.38074 11.5897C7.41458 11.6709 7.46418 11.7447 7.52667 11.8066C7.58864 11.8691 7.66238 11.9187 7.74361 11.9526C7.82485 11.9864 7.91199 12.0038 8 12.0038C8.08801 12.0038 8.17514 11.9864 8.25638 11.9526C8.33762 11.9187 8.41136 11.8691 8.47333 11.8066L11.8067 8.47331C11.8674 8.40991 11.9149 8.33515 11.9467 8.25331C12.0133 8.09101 12.0133 7.90895 11.9467 7.74665Z" fill="currentColor"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="row g-8">
+                            <div class="col-auto">
+                                <img class="img-fluid" src="flex-assets/images/blog/news3-vertical.png" alt="">
+                            </div>
+                            <div class="col">
+                                <div class="d-flex flex-column justify-content-between mw-lg-xs h-100">
+                                    <a class="d-inline-block mb-8" href="#">
+                                        <h3 class="font-heading mb-0 fs-7 text-light-dark link-light-dark">Student Name</h3>
+                                    </a>
+                                    <a class="d-inline-flex align-items-center text-success link-success" href="#">
+                                        <span class="me-2 fw-semibold fs-10">Read Campaign</span>
+                                        <svg width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11.9467 7.74665C11.9149 7.66481 11.8674 7.59005 11.8067 7.52665L8.47333 4.19331C8.41117 4.13116 8.33738 4.08185 8.25617 4.04821C8.17495 4.01457 8.08791 3.99725 8 3.99725C7.82246 3.99725 7.6522 4.06778 7.52667 4.19331C7.46451 4.25547 7.4152 4.32927 7.38156 4.41048C7.34792 4.4917 7.33061 4.57874 7.33061 4.66665C7.33061 4.84418 7.40113 5.01445 7.52667 5.13998L9.72667 7.33331H4.66667C4.48986 7.33331 4.32029 7.40355 4.19526 7.52858C4.07024 7.6536 4 7.82317 4 7.99998C4 8.17679 4.07024 8.34636 4.19526 8.47139C4.32029 8.59641 4.48986 8.66665 4.66667 8.66665H9.72667L7.52667 10.86C7.46418 10.922 7.41458 10.9957 7.38074 11.0769C7.34689 11.1582 7.32947 11.2453 7.32947 11.3333C7.32947 11.4213 7.34689 11.5085 7.38074 11.5897C7.41458 11.6709 7.46418 11.7447 7.52667 11.8066C7.58864 11.8691 7.66238 11.9187 7.74361 11.9526C7.82485 11.9864 7.91199 12.0038 8 12.0038C8.08801 12.0038 8.17514 11.9864 8.25638 11.9526C8.33762 11.9187 8.41136 11.8691 8.47333 11.8066L11.8067 8.47331C11.8674 8.40991 11.9149 8.33515 11.9467 8.25331C12.0133 8.09101 12.0133 7.90895 11.9467 7.74665Z" fill="currentColor"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="row g-8">
+                            <div class="col-auto">
+                                <img class="img-fluid" src="flex-assets/images/blog/news4-vertical.png" alt="">
+                            </div>
+                            <div class="col">
+                                <div class="d-flex flex-column justify-content-between mw-lg-xs h-100">
+                                    <a class="d-inline-block mb-8" href="#">
+                                        <h3 class="font-heading mb-0 fs-7 text-light-dark link-light-dark">Student Name</h3>
+                                    </a>
+                                    <a class="d-inline-flex align-items-center text-success link-success" href="#">
+                                        <span class="me-2 fw-semibold fs-10">Read Campaign</span>
+                                        <svg width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11.9467 7.74665C11.9149 7.66481 11.8674 7.59005 11.8067 7.52665L8.47333 4.19331C8.41117 4.13116 8.33738 4.08185 8.25617 4.04821C8.17495 4.01457 8.08791 3.99725 8 3.99725C7.82246 3.99725 7.6522 4.06778 7.52667 4.19331C7.46451 4.25547 7.4152 4.32927 7.38156 4.41048C7.34792 4.4917 7.33061 4.57874 7.33061 4.66665C7.33061 4.84418 7.40113 5.01445 7.52667 5.13998L9.72667 7.33331H4.66667C4.48986 7.33331 4.32029 7.40355 4.19526 7.52858C4.07024 7.6536 4 7.82317 4 7.99998C4 8.17679 4.07024 8.34636 4.19526 8.47139C4.32029 8.59641 4.48986 8.66665 4.66667 8.66665H9.72667L7.52667 10.86C7.46418 10.922 7.41458 10.9957 7.38074 11.0769C7.34689 11.1582 7.32947 11.2453 7.32947 11.3333C7.32947 11.4213 7.34689 11.5085 7.38074 11.5897C7.41458 11.6709 7.46418 11.7447 7.52667 11.8066C7.58864 11.8691 7.66238 11.9187 7.74361 11.9526C7.82485 11.9864 7.91199 12.0038 8 12.0038C8.08801 12.0038 8.17514 11.9864 8.25638 11.9526C8.33762 11.9187 8.41136 11.8691 8.47333 11.8066L11.8067 8.47331C11.8674 8.40991 11.9149 8.33515 11.9467 8.25331C12.0133 8.09101 12.0133 7.90895 11.9467 7.74665Z" fill="currentColor"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="row g-8">
+                            <div class="col-auto">
+                                <img class="img-fluid" src="flex-assets/images/blog/news5-vertical.png" alt="">
+                            </div>
+                            <div class="col">
+                                <div class="d-flex flex-column justify-content-between mw-lg-xs h-100">
+                                    <a class="d-inline-block mb-8" href="#">
+                                        <h3 class="font-heading mb-0 fs-7 text-light-dark link-light-dark">Student Name</h3>
+                                    </a>
+                                    <a class="d-inline-flex align-items-center text-success link-success" href="#">
+                                        <span class="me-2 fw-semibold fs-10">Read Campaign</span>
+                                        <svg width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11.9467 7.74665C11.9149 7.66481 11.8674 7.59005 11.8067 7.52665L8.47333 4.19331C8.41117 4.13116 8.33738 4.08185 8.25617 4.04821C8.17495 4.01457 8.08791 3.99725 8 3.99725C7.82246 3.99725 7.6522 4.06778 7.52667 4.19331C7.46451 4.25547 7.4152 4.32927 7.38156 4.41048C7.34792 4.4917 7.33061 4.57874 7.33061 4.66665C7.33061 4.84418 7.40113 5.01445 7.52667 5.13998L9.72667 7.33331H4.66667C4.48986 7.33331 4.32029 7.40355 4.19526 7.52858C4.07024 7.6536 4 7.82317 4 7.99998C4 8.17679 4.07024 8.34636 4.19526 8.47139C4.32029 8.59641 4.48986 8.66665 4.66667 8.66665H9.72667L7.52667 10.86C7.46418 10.922 7.41458 10.9957 7.38074 11.0769C7.34689 11.1582 7.32947 11.2453 7.32947 11.3333C7.32947 11.4213 7.34689 11.5085 7.38074 11.5897C7.41458 11.6709 7.46418 11.7447 7.52667 11.8066C7.58864 11.8691 7.66238 11.9187 7.74361 11.9526C7.82485 11.9864 7.91199 12.0038 8 12.0038C8.08801 12.0038 8.17514 11.9864 8.25638 11.9526C8.33762 11.9187 8.41136 11.8691 8.47333 11.8066L11.8067 8.47331C11.8674 8.40991 11.9149 8.33515 11.9467 8.25331C12.0133 8.09101 12.0133 7.90895 11.9467 7.74665Z" fill="currentColor"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="row g-8">
+                            <div class="col-auto">
+                                <img class="img-fluid" src="flex-assets/images/blog/news6-vertical.png" alt="">
+                            </div>
+                            <div class="col">
+                                <div class="d-flex flex-column justify-content-between mw-lg-xs h-100">
+                                    <a class="d-inline-block mb-8" href="#">
+                                        <h3 class="font-heading mb-0 fs-7 text-light-dark link-light-dark">Student Name</h3>
+                                    </a>
+                                    <a class="d-inline-flex align-items-center text-success link-success" href="#">
+                                        <span class="me-2 fw-semibold fs-10">Read Campaign</span>
+                                        <svg width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11.9467 7.74665C11.9149 7.66481 11.8674 7.59005 11.8067 7.52665L8.47333 4.19331C8.41117 4.13116 8.33738 4.08185 8.25617 4.04821C8.17495 4.01457 8.08791 3.99725 8 3.99725C7.82246 3.99725 7.6522 4.06778 7.52667 4.19331C7.46451 4.25547 7.4152 4.32927 7.38156 4.41048C7.34792 4.4917 7.33061 4.57874 7.33061 4.66665C7.33061 4.84418 7.40113 5.01445 7.52667 5.13998L9.72667 7.33331H4.66667C4.48986 7.33331 4.32029 7.40355 4.19526 7.52858C4.07024 7.6536 4 7.82317 4 7.99998C4 8.17679 4.07024 8.34636 4.19526 8.47139C4.32029 8.59641 4.48986 8.66665 4.66667 8.66665H9.72667L7.52667 10.86C7.46418 10.922 7.41458 10.9957 7.38074 11.0769C7.34689 11.1582 7.32947 11.2453 7.32947 11.3333C7.32947 11.4213 7.34689 11.5085 7.38074 11.5897C7.41458 11.6709 7.46418 11.7447 7.52667 11.8066C7.58864 11.8691 7.66238 11.9187 7.74361 11.9526C7.82485 11.9864 7.91199 12.0038 8 12.0038C8.08801 12.0038 8.17514 11.9864 8.25638 11.9526C8.33762 11.9187 8.41136 11.8691 8.47333 11.8066L11.8067 8.47331C11.8674 8.40991 11.9149 8.33515 11.9467 8.25331C12.0133 8.09101 12.0133 7.90895 11.9467 7.74665Z" fill="currentColor"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <nav class="d-flex justify-content-center" aria-label="page navigation example">
+                    <ul class="pagination shadow">
+                        <li class="page-item">
+                            <a class="page-link d-flex align-items-center fw-medium h-100" href="#">
+                                <svg width="8" height="12" viewbox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M3.28994 5.99995L6.82994 2.45995C7.01619 2.27259 7.12074 2.01913 7.12074 1.75495C7.12074 1.49076 7.01619 1.23731 6.82994 1.04995C6.73698 0.95622 6.62638 0.881826 6.50452 0.831057C6.38266 0.780288 6.25196 0.75415 6.11994 0.75415C5.98793 0.75415 5.85723 0.780288 5.73537 0.831057C5.61351 0.881826 5.50291 0.95622 5.40994 1.04995L1.16994 5.28995C1.07622 5.38291 1.00182 5.49351 0.951053 5.61537C0.900284 5.73723 0.874146 5.86794 0.874146 5.99995C0.874146 6.13196 0.900284 6.26267 0.951053 6.38453C1.00182 6.50638 1.07622 6.61699 1.16994 6.70995L5.40994 10.9999C5.50338 11.0926 5.6142 11.166 5.73604 11.2157C5.85787 11.2655 5.98834 11.2907 6.11994 11.2899C6.25155 11.2907 6.38201 11.2655 6.50385 11.2157C6.62569 11.166 6.7365 11.0926 6.82994 10.9999C7.01619 10.8126 7.12074 10.5591 7.12074 10.2949C7.12074 10.0308 7.01619 9.77731 6.82994 9.58995L3.28994 5.99995Z" fill="#BBC3CF"></path>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link fw-medium" href="#">1</a></li>
+                        <li class="page-item active"><a class="page-link fw-medium" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link fw-medium" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link d-flex align-items-center fw-medium h-100" href="#">
+                                <svg width="8" height="12" viewbox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4.71006 6.00005L1.17006 9.54005C0.983805 9.72741 0.879264 9.98087 0.879264 10.2451C0.879264 10.5092 0.983805 10.7627 1.17006 10.9501C1.26302 11.0438 1.37362 11.1182 1.49548 11.1689C1.61734 11.2197 1.74804 11.2459 1.88006 11.2459C2.01207 11.2459 2.14277 11.2197 2.26463 11.1689C2.38649 11.1182 2.49709 11.0438 2.59006 10.9501L6.83006 6.71005C6.92378 6.61709 6.99818 6.50649 7.04895 6.38463C7.09972 6.26277 7.12585 6.13206 7.12585 6.00005C7.12585 5.86804 7.09972 5.73733 7.04895 5.61547C6.99818 5.49362 6.92378 5.38301 6.83006 5.29005L2.59006 1.00005C2.49662 0.907371 2.3858 0.834046 2.26396 0.784281C2.14212 0.734517 2.01166 0.70929 1.88006 0.710051C1.74845 0.70929 1.61799 0.734517 1.49615 0.784281C1.37431 0.834046 1.2635 0.907371 1.17006 1.00005C0.983804 1.18741 0.879263 1.44087 0.879263 1.70505C0.879263 1.96924 0.983804 2.22269 1.17006 2.41005L4.71006 6.00005Z" fill="#BBC3CF"></path>
+                                </svg>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+
+
+
+
+        </section>
+
+        <section class="position-relative pt-20 pb-32 bg-white overflow-hidden" style="background-image: url('flex-assets/elements/pattern-light.png')">
+            <div class="position-absolute top-0 start-0 h-100 w-100" style="background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);"></div>
+            <div class="container">
+                <div class="position-relative" style="z-index: 10;">
+                    <div class="mb-16 mw-4xl mx-auto text-center">
+
+                        <h2 class="mb-4 fs-6 font-heading" style="letter-spacing: -1px;">Start your own campaign today.</h2>
+                        <p class="mb-6 fs-9 fw-medium text-secondary">Start sharing your story and connect with supporters who want to help you succeed. BrightAid makes it simple to turn your goals into reality. Click "Get Started" to begin!</p>
+                        <div class="row justify-content-center">
+                            <div class="col col-md-auto"><a class="btn btn-success w-100 px-7 py-4 fs-10 fw-medium text-success-light rounded shadow" href="sign-up-page-student.html">Get Started</a></div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-auto">
+                            <div class="position-relative">
+
+
+                                <img class="position-relative img-fluid" style="z-index: 10;" src="images/content3.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <section class="overflow-hidden">
+            <div class="d-flex mb-n1 text-secondary-dark">
+                <svg class="w-100" viewbox="0 0 1440 116" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1440 64.5909H1090.08C833.336 64.5909 580.229 -7.62939e-06 360 -7.62939e-06C139.771 -7.62939e-06 0 64.5909 0 64.5909V116H1440V64.5909Z" fill="#2A3342"></path>
+                </svg>
+            </div>
+            <div class="position-relative pt-20 bg-secondary-dark" style="background-image: url('flex-assets/elements/pattern-dark.png')">
+                <div class="position-absolute top-0 start-0 h-100 w-100" style="background: radial-gradient(50% 50% at 50% 50%, rgba(42, 51, 66, 0) 0%, #2A3342 100%);"></div>
+                <div class="position-relative container" style="z-index:1;">
+                    <div class="d-flex justify-content-center mb-2">
+                        <a href="index.html">
+                            <img class="img-fluid" src="images/bricongreensmallbare.png" alt="">
+                        </a>
+                    </div>
+                    <ul class="nav justify-content-center mb-5">
+                        <li class="nav-item"><a class="nav-link p-6 fs-9 link-secondary-light" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link p-6 fs-9 link-secondary-light" href="about.html">About</a></li>
+                        <li class="nav-item"><a class="nav-link p-6 fs-9 link-secondary-light" href="campaigns.html">Campaigns</a></li>
+                        <li class="nav-item"><a class="nav-link p-6 fs-9 link-secondary-light" href="#">Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="position-relative border-bottom border-light-dark" style="z-index: 1;"></div>
+                <div class="position-relative container" style="z-index: 1;">
+                    <p class="mb-0 pt-10 pb-20 fs-9 fw-medium text-center text-secondary-light">© 2024 Voltaire &amp; Kevin</p>
+                </div>
+            </div>
+        </section>
+        <!-- End of Footer Section -->
+
+
+
+
+
+
+
+
+
+    </div>
+    <script src="js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+
+
+
+
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const navbarPlaceholder = document.getElementById("navbar-placeholder");
+
+            // Fetch and load the navbar
+            fetch("navbar.html")
+                .then(response => response.text())
+                .then(html => {
+                    navbarPlaceholder.innerHTML = html;
+
+                    // Initialize navbar links after loading
+                    const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+                    const loginLink = document.getElementById("loginLink");
+                    const signUpLink = document.getElementById("signUpLink");
+                    const dashboardLink = document.getElementById("dashboardLink");
+
+                    if (currentUser.email) {
+                        loginLink.textContent = `Welcome, ${currentUser.firstName?.trim() || currentUser.email || "User"}`;
+                        loginLink.href = "#";
+                        signUpLink.textContent = "Log Out";
+                        signUpLink.href = "#";
+                        signUpLink.onclick = () => {
+                            localStorage.removeItem("currentUser");
+                            window.location.href = "sign-in-page.html";
+                        };
+
+                        dashboardLink.href =
+                            currentUser.role === "Donor"
+                                ? "dashboard-donor.html"
+                                : "dashboard-student.html";
+                    }
+                })
+                .catch(error => {
+                    console.error("Failed to load navbar:", error);
+                });
+        });
+
+    </script>
+
+
+
+
+
+
+</body>
+</html>

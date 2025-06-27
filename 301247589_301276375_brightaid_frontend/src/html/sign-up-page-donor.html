@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Donor Sign-Up</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="shuffle-for-bootstrap.png">
+</head>
+<body>
+    <div>
+        <section class="position-relative py-32 bg-white overflow-hidden bs-section-dragged"
+                 style="background-image: url('flex-assets/elements/pattern-light.png');">
+            <div class="position-absolute top-0 start-0 h-100 w-100"
+                 style="background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);">
+            </div>
+            <div class="position-relative container" style="z-index: 1;">
+                <div class="mb-7 text-center mw-md mx-auto">
+                    <div class="mb-6 d-flex align-items-center justify-content-center mx-auto bg-success rounded-3"
+                         style="width: 64px; height: 64px;">
+                        <img class="img-fluid" style="height: 40px;" src="images/bricon2.png" alt="">
+                    </div>
+                    <h2 class="font-heading mb-4 fs-7">Let’s begin making a difference</h2>
+                    <p class="mb-0 fs-9 fw-medium text-secondary">Your generosity can change lives.</p>
+                </div>
+                <form class="mw-sm mx-auto" id="donorSignUpForm" autocomplete="off">
+                    <div class="mb-4 row g-6">
+                        <!-- First Name -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="mb-1 fw-medium text-light-dark" for="firstName">First Name</label>
+                                <input class="form-control text-secondary-dark shadow" id="firstName" type="text" placeholder="First Name" required>
+                            </div>
+                        </div>
+
+                        <!-- Last Name -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-label" for="lastName">Last Name</label>
+                                <input class="form-control" id="lastName" type="text" placeholder="Last Name" required>
+                            </div>
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-label" for="phoneNumber">Phone Number</label>
+                                <input class="form-control" id="phoneNumber" type="text" placeholder="Phone Number">
+                            </div>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-label" for="address">Address</label>
+                                <input class="form-control" id="address" type="text" placeholder="Address">
+                            </div>
+                        </div>
+
+                        <!-- Organization Name -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-label" for="organizationName">Organization Name</label>
+                                <input class="form-control" id="organizationName" type="text" placeholder="Organization Name">
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="mb-1 fw-medium text-light-dark" for="email">Email</label>
+                                <input class="form-control text-secondary-dark shadow" id="email" type="email" placeholder="Email" required>
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="mb-1 fw-medium text-light-dark" for="password">Password</label>
+                                <input class="form-control text-secondary-dark shadow" id="password" type="password" placeholder="Password" required>
+                            </div>
+                        </div>
+
+                        <!-- Region -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-label" for="region">Region</label>
+                                <input class="form-control" id="region" type="text" placeholder="Region">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sign Up Button -->
+                    <div class="mb-6 row g-4">
+                        <div class="col-12">
+                            <button class="btn btn-lg btn-success fs-11 py-3 w-100 text-success-light shadow" type="submit">
+                                Sign Up
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sign In Link -->
+                    <p class="mb-0 fs-13 fw-medium text-light-dark text-center">
+                        <span>Already have an account?</span>
+                        <a class="text-success link-success" href="sign-in-page.html">Sign in</a>
+                    </p>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('donorSignUpForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Gather form data
+            const donorData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                address: document.getElementById('address').value,
+                organizationName: document.getElementById('organizationName').value,
+                donationAmount: null, // Default value
+                messageToRecipient: null, // Default value
+                preferredRegion: document.getElementById('region').value,
+                isRecurringDonor: null, // Default value
+                password: document.getElementById('password').value,
+                donationDate: new Date().toISOString()
+            };
+
+            console.log("Donor data being sent:", donorData);
+
+            // API request
+            fetch('http://localhost:5027/api/Donors', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(donorData)
+            })
+                .then(response => {
+                    console.log("Response received:", response);
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            console.error('Error details:', err);
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Sign-up successful:', data);
+                    alert('Sign-up successful!');
+                    window.location.href = 'sign-in-page.html'; // Redirect to login page
+                })
+                .catch(error => {
+                    console.error('Error during sign-up:', error);
+                    alert('Error during sign-up. Please try again.');
+                });
+        });
+    </script>
+</body>
+</html>

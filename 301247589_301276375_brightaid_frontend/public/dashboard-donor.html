@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Page title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="shuffle-for-bootstrap.png">
+</head>
+
+
+
+
+
+<body>
+
+
+
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const navbarPlaceholder = document.getElementById("navbar-placeholder");
+
+            // Load Navbar
+            fetch("navbar.html")
+                .then(response => response.text())
+                .then(html => {
+                    navbarPlaceholder.innerHTML = html;
+
+                    const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+                    const loginLink = document.getElementById("loginLink");
+                    const signUpLink = document.getElementById("signUpLink");
+                    const dashboardLink = document.getElementById("dashboardLink");
+
+                    if (currentUser.email) {
+                        loginLink.textContent = `Welcome, ${currentUser.firstName || currentUser.email}`;
+                        loginLink.href = "#";
+                        signUpLink.textContent = "Log Out";
+                        signUpLink.href = "#";
+                        signUpLink.onclick = () => {
+                            localStorage.removeItem("currentUser");
+                            window.location.href = "sign-in-page.html";
+                        };
+
+                        dashboardLink.href =
+                            currentUser.role === "Donor"
+                                ? "dashboard-donor.html"
+                                : "dashboard-student.html";
+
+                        // Populate "Donor Name"
+                        document.querySelector(".font-heading.mb-4.fs-5").textContent = currentUser.firstName || "Donor";
+                    }
+                })
+                .catch(error => console.error("Failed to load navbar:", error));
+
+            // Fetch Donor Data and Initialize Text Area
+            const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+            if (currentUser.role === "Donor") {
+                const donorId = currentUser.id; // Ensure correct donorId is used
+
+                fetch(`http://localhost:5027/api/Donors/${donorId}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error("Failed to fetch donor data");
+                        return response.json();
+                    })
+                    .then(donorData => {
+                        const studentId = donorData.studentId;
+
+                        if (studentId) {
+                            // Fetch Student Details
+                            fetch(`http://localhost:5027/api/Students/${studentId}`)
+                                .then(response => {
+                                    if (!response.ok) throw new Error("Failed to fetch student data");
+                                    return response.json();
+                                })
+                                .then(studentData => {
+                                    // Populate Student Name (Top Section)
+                                    document.querySelector(".font-heading.mb-0.fs-9").textContent =
+                                        `${studentData.firstName} ${studentData.lastName}`;
+
+                                    // Populate Requested Amount
+                                    document.querySelector(".me-2.fw-medium").textContent = `$ ${studentData.requestedAmount}`;
+
+                                    // Populate Student's Name (Bottom Section)
+                                    document.querySelectorAll(".font-heading.mb-4.fs-5")[1].textContent =
+                                        `${studentData.firstName} ${studentData.lastName}`;
+                                })
+                                .catch(error => console.error("Error fetching student data:", error));
+                        }
+
+                        // Ensure Textarea Pre-Fills with Existing Message
+                        const textField = document.getElementById("message-text");
+                        textField.value = donorData.messageToRecipient || ""; // Pre-fill with existing message
+
+                        // Handle Update Message Button
+                        const updateMessageButton = document.getElementById("update-message-btn");
+                        updateMessageButton.addEventListener("click", () => {
+                            const updatedMessage = textField.value.trim();
+
+                            if (!updatedMessage) {
+                                alert("Message cannot be empty.");
+                                return;
+                            }
+
+                            // Update only the messageToRecipient field
+                            const updatedDonorData = { ...donorData, messageToRecipient: updatedMessage };
+
+                            console.log("PUT Data:", updatedDonorData); // Debugging log
+
+                            // PUT request to update donor
+                            fetch(`http://localhost:5027/api/Donors/${donorId}`, {
+                                method: "PUT",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify(updatedDonorData),
+                            })
+                                .then(response => {
+                                    if (!response.ok) throw new Error("Failed to update donor data");
+                                    alert("Your message has been updated successfully.");
+                                })
+                                .catch(error => console.error("Error updating donor message:", error));
+                        });
+                    })
+                    .catch(error => console.error("Error fetching donor data:", error));
+            }
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="">
+
+
+
+        <!-- Navbar Partial -->
+        <div id="navbar-placeholder"></div>
+        <!-- Navbar Partial -->
+
+
+
+
+
+
+
+
+        <section class="position-relative py-20 bg-white overflow-hidden" style="background-image: url('flex-assets/elements/pattern-light.png')">
+            <div class="position-absolute top-0 start-0 h-100 w-100" style="background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);"></div>
+            <div class="position-relative container" style="z-index:1;">
+                <div class="mb-12 text-center mw-md-5xl mx-auto">
+
+                    <h2 class="font-heading mb-4 fs-5" style="letter-spacing: -1px;">Donor Name</h2>
+                    <p class="mb-0 fs-9 fw-medium text-secondary">Welcome to your donor dashboard. Here, you can connect with your sponsored student, track their progress, and see the difference your support is making.</p>
+                </div>
+                <div class="mw-md-3xl mx-auto">
+                    <div class="row g-6">
+                        <div class="col-12">
+                            <a class="d-block text-success link-success bg-light-light rounded shadow" href="#">
+                                <div class="p-10">
+                                    <div class="row justify-content-between g-2">
+                                        <div class="col-auto">
+                                            <h2 class="font-heading mb-0 fs-9 fw-semibold text-light-dark">Student Name</h2>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="d-inline-flex align-items-center" href="#">
+                                                <span class="me-2 fw-medium">$ 0000.00</span>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-12">
+                            <a class="d-block text-success link-success bg-light-light rounded shadow" href="#">
+
+                            </a>
+                        </div>
+                        <div class="col-12">
+                            <a class="d-block text-success link-success bg-light-light rounded shadow" href="#">
+
+                            </a>
+                        </div>
+                        <div class="col-12">
+                            <a class="d-block text-success link-success bg-light-light rounded shadow" href="#">
+
+                            </a>
+                        </div>
+                        <div class="col-12">
+                            <a class="d-block text-success link-success bg-light-light rounded shadow" href="#">
+
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Your Update Message Section -->
+        <section class="position-relative py-40 bg-white overflow-hidden" style="background-image: url('flex-assets/elements/pattern-light.png')">
+            <div class="position-absolute top-0 start-0 h-100 w-100" style="background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);"></div>
+            <div class="position-relative container" style="z-index:1;">
+                <div class="row align-items-center g-16">
+                    <div class="col-12 col-md-6">
+                        <div class="d-flex justify-content-center">
+                            <img class="img-fluid" src="flex-assets/images/http-codes/error-code.png" alt="">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="mw-md-5xl mx-auto">
+                            <h2 class="font-heading mb-4 fs-5" style="letter-spacing: -1px;">Student's Name</h2>
+                            <!-- The Textarea -->
+                            <textarea id="message-text" class="form-control shadow" placeholder="Enter your message here..."></textarea>
+                            <!-- The Button -->
+                            <div class="row g-4 g-md-6 mt-4">
+                                <div class="col-12 col-md-auto">
+                                    <button id="update-message-btn" class="btn btn-lg btn-success w-100 text-success-light shadow">Update Message</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+
+        <!-- Footer Section -->
+        <section class="overflow-hidden">
+            <div class="d-flex mb-n1 text-secondary-dark">
+                <svg class="w-100" viewbox="0 0 1440 116" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1440 64.5909H1090.08C833.336 64.5909 580.229 -7.62939e-06 360 -7.62939e-06C139.771 -7.62939e-06 0 64.5909 0 64.5909V116H1440V64.5909Z" fill="#2A3342"></path>
+                </svg>
+            </div>
+            <div class="position-relative pt-20 bg-secondary-dark" style="background-image: url('flex-assets/elements/pattern-dark.png')">
+                <div class="position-absolute top-0 start-0 h-100 w-100" style="background: radial-gradient(50% 50% at 50% 50%, rgba(42, 51, 66, 0) 0%, #2A3342 100%);"></div>
+                <div class="position-relative container" style="z-index:1;">
+                    <div class="d-flex justify-content-center mb-2">
+                        <a href="index.html">
+                            <img class="img-fluid" src="images/bricongreensmallbare.png" alt="">
+                        </a>
+                    </div>
+                    <ul class="nav justify-content-center mb-5">
+                        <li class="nav-item"><a class="nav-link p-6 fs-9 link-secondary-light" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link p-6 fs-9 link-secondary-light" href="about.html">About</a></li>
+                        <li class="nav-item"><a class="nav-link p-6 fs-9 link-secondary-light" href="campaigns.html">Campaigns</a></li>
+                        <li class="nav-item"><a class="nav-link p-6 fs-9 link-secondary-light" href="#">Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="position-relative border-bottom border-light-dark" style="z-index: 1;"></div>
+                <div class="position-relative container" style="z-index: 1;">
+                    <p class="mb-0 pt-10 pb-20 fs-9 fw-medium text-center text-secondary-light">© 2024 Voltaire &amp; Kevin</p>
+                </div>
+            </div>
+        </section>
+        <!-- End of Footer Section -->
+
+
+
+
+
+
+
+
+
+    </div>
+    <script src="js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+
+
+
+
+
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const navbarPlaceholder = document.getElementById("navbar-placeholder");
+
+            // Fetch and load the navbar
+            fetch("navbar.html")
+                .then(response => response.text())
+                .then(html => {
+                    navbarPlaceholder.innerHTML = html;
+
+                    // Initialize navbar links after loading
+                    const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+                    const loginLink = document.getElementById("loginLink");
+                    const signUpLink = document.getElementById("signUpLink");
+                    const dashboardLink = document.getElementById("dashboardLink");
+
+                    if (currentUser.email) {
+                        loginLink.textContent = `Welcome, ${currentUser.firstName?.trim() || currentUser.email || "User"}`;
+                        loginLink.href = "#";
+                        signUpLink.textContent = "Log Out";
+                        signUpLink.href = "#";
+                        signUpLink.onclick = () => {
+                            localStorage.removeItem("currentUser");
+                            window.location.href = "sign-in-page.html";
+                        };
+
+                        dashboardLink.href =
+                            currentUser.role === "Donor"
+                                ? "dashboard-donor.html"
+                                : "dashboard-student.html";
+                    }
+                })
+                .catch(error => {
+                    console.error("Failed to load navbar:", error);
+                });
+        });
+
+    </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Student Sign Up</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="shuffle-for-bootstrap.png">
+</head>
+<body>
+    <div>
+        <section class="position-relative py-32 bg-white overflow-hidden"
+                 style="background-image: url('flex-assets/elements/pattern-light.png');">
+            <div class="container">
+                <div class="text-center mb-7">
+                    <h2 class="font-heading fs-7">Start your fundraising journey</h2>
+                    <p class="fs-9 fw-medium text-secondary">We’ll guide you every step of the way.</p>
+                </div>
+                <form id="studentSignUpForm" class="mw-sm mx-auto">
+                    <div class="mb-4">
+                        <label class="form-label" for="firstName">First Name</label>
+                        <input class="form-control" id="firstName" type="text" placeholder="First Name" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" for="lastName">Last Name</label>
+                        <input class="form-control" id="lastName" type="text" placeholder="Last Name" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" for="email">Email</label>
+                        <input class="form-control" id="email" type="email" placeholder="Email" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" for="phoneNumber">Phone Number</label>
+                        <input class="form-control" id="phoneNumber" type="text" placeholder="Phone Number" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" for="countryOfOrigin">Country of Origin</label>
+                        <input class="form-control" id="countryOfOrigin" type="text" placeholder="Country of Origin" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" for="gender">Gender</label>
+                        <select class="form-control" id="gender" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" for="institutionName">Institution Name</label>
+                        <input class="form-control" id="institutionName" type="text" placeholder="Institution Name" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" for="programOfStudy">Program of Study</label>
+                        <input class="form-control" id="programOfStudy" type="text" placeholder="Program of Study" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" for="yearOfStudy">Year of Study</label>
+                        <input class="form-control" id="yearOfStudy" type="number" min="1" max="5" placeholder="Year of Study" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" for="gpa">Current GPA</label>
+                        <input class="form-control" id="gpa" type="number" min="0" max="4.0" step="0.01" placeholder="Current GPA" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" for="requestedAmount">Campaign Goal (Requested Amount)</label>
+                        <input class="form-control" id="requestedAmount" type="number" min="0" step="0.01" placeholder="Requested Amount (e.g., 15000)" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" for="financialNeedDescription">Your Story</label>
+                        <textarea class="form-control" id="financialNeedDescription" rows="4" placeholder="Explain your financial need" required></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" for="password">Password</label>
+                        <input class="form-control" id="password" type="password" placeholder="Password" required>
+                    </div>
+                    <div class="mb-4">
+                        <button class="btn btn-success w-100" type="submit">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+    <script>
+        document.getElementById('studentSignUpForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Capture form data
+            const formData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                countryOfOrigin: document.getElementById('countryOfOrigin').value,
+                gender: document.getElementById('gender').value,
+                institutionName: document.getElementById('institutionName').value,
+                programOfStudy: document.getElementById('programOfStudy').value,
+                yearOfStudy: parseInt(document.getElementById('yearOfStudy').value, 10),
+                gpa: parseFloat(document.getElementById('gpa').value),
+                requestedAmount: parseFloat(document.getElementById('requestedAmount').value),
+                financialNeedDescription: document.getElementById('financialNeedDescription').value,
+                password: document.getElementById('password').value,
+                registrationDate: new Date().toISOString() // Capture current system time
+            };
+
+            // POST request to API
+            fetch('http://localhost:5027/api/Students', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to sign up');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert('Sign-up successful! Welcome to BrightAid!');
+                    console.log('Response:', data);
+                    // Redirect to sign-in page
+                    window.location.href = 'sign-in-page.html';
+                })
+                .catch(error => {
+                    alert('There was an error during sign-up.');
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+</html>

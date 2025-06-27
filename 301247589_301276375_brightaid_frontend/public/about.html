@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Page title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="shuffle-for-bootstrap.png">
+</head>
+<body>
+
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const navbarPlaceholder = document.getElementById("navbar-placeholder");
+
+            // Fetch and load the navbar
+            fetch("navbar.html")
+                .then(response => response.text())
+                .then(html => {
+                    navbarPlaceholder.innerHTML = html;
+
+                    // Initialize navbar links after loading
+                    const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+                    const loginLink = document.getElementById("loginLink");
+                    const signUpLink = document.getElementById("signUpLink");
+                    const dashboardLink = document.getElementById("dashboardLink");
+
+                    if (currentUser.email) {
+                        loginLink.textContent = `Welcome, ${currentUser.firstName?.trim() || currentUser.email || "User"}`;
+                        loginLink.href = "#";
+                        signUpLink.textContent = "Log Out";
+                        signUpLink.href = "#";
+                        signUpLink.onclick = () => {
+                            localStorage.removeItem("currentUser");
+                            window.location.href = "sign-in-page.html";
+                        };
+
+                        dashboardLink.href =
+                            currentUser.role === "Donor"
+                                ? "dashboard-donor.html"
+                                : "dashboard-student.html";
+                    }
+                })
+                .catch(error => {
+                    console.error("Failed to load navbar:", error);
+                });
+        });
+
+    </script>
+
+
+
+    <div class="">
+
+        <!-- Navbar Partial -->
+        <div id="navbar-placeholder"></div>
+        <!-- Navbar Partial -->
+
+
+
+
+
+
+        <section class="position-relative py-20 bg-white overflow-hidden" style="background-image: url('flex-assets/elements/pattern-light.png')">
+            <div class="position-absolute top-0 start-0 h-100 w-100" style="background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);"></div>
+            <div class="position-relative container" style="z-index:1;">
+                <div class="mb-12 text-center mw-md-2xl mx-auto">
+
+                    <h2 class="font-heading mb-4 fs-5" style="letter-spacing: -1px;">BrightAid</h2>
+                    <p class="mb-6 fs-9 fw-medium text-secondary">To bridge the gap between aspiring students and compassionate donors, fostering opportunities for growth, education, and success.</p>
+
+                </div>
+                <div class="mb-10 d-flex justify-content-center">
+                    <img class="img-fluid" src="images/about1.png" alt="">
+                </div>
+                <div class="mw-md-2xl mx-auto">
+
+                    <h3 class="mb-4 font-heading fs-7 text-light-dark fw-semibold"> About BrightAid</h3>
+                    <p class="mb-6 fs-10 text-secondary">At BrightAid, we believe in the power of community and the potential of education. Our platform is designed to connect international students in Canada with generous donors who want to make a meaningful impact. By addressing financial barriers, we empower students to focus on achieving their dreams and building a brighter future.</p>
+                    <div class="mb-6 row g-6">
+                        <div class="col-auto">
+                            <div class="bg-success h-100 rounded-pill" style="width: 2px;"></div>
+                        </div>
+                        <div class="col">
+                            <div class="py-7">
+                                <p class="mb-4 fs-8 text-light-dark fw-medium">"What started as a simple class assignment at Centennial College quickly turned into something far greater. While creating BrightAid for our API class, we realized the profound impact it could have on the lives of international students. BrightAid isn’t just a project—it’s a platform built to empower dreams, connect communities, and make education accessible for those who need it most."</p>
+                                <p class="mb-0 fs-10 text-secondary-light fw-medium">— Voltaire Rono, Co-Founder at BrightAid</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mb-6 fs-10 text-secondary">Why BrightAid? For Students: A simple, secure way to share your story and raise the funds you need for tuition, living expenses, or emergencies. For Donors: A trusted platform to connect with inspiring individuals and directly contribute to their success.</p>
+                    <img class="mb-4 img-fluid w-100" src="images/about2.png" alt="">
+                    <p class="mb-8 fs-10 text-secondary-light fw-medium">
+
+                        <u></u>
+
+                    </p>
+                    <h3 class="mb-4 font-heading fs-7 text-light-dark fw-semibold">Our Commitment</h3>
+                    <p class="mb-16 fs-10 text-secondary">
+                        Transparency, trust, and empowerment are at the core of everything we do. Whether you're starting a fundraiser or supporting one, BrightAid is here to guide you every step of the way.
+
+                        Join us in transforming lives, one donation at a time. Together, we can make education accessible for all.
+                    </p>
+
+                    <ol class="list-unstyled px-4 mb-16">
+                    </ol>
+
+
+                </div>
+            </div>
+        </section>
+
+        <section class="position-relative py-20 bg-white overflow-hidden" style="background-image: url('flex-assets/elements/pattern-light.png')">
+            <div class="position-absolute top-0 start-0 h-100 w-100" style="background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);"></div>
+            <div class="position-relative container" style="z-index:1;">
+                <div class="text-center">
+
+                    <div class="position-relative mb-16 mw-md-5xl mx-auto">
+                        <h2 class="position-relative mb-0 font-heading fs-5 fw-semibold" style="z-index: 1; letter-spacing: -1px;">
+                            As international students, we created BrightAid to help others overcome the challenges we’ve faced.
+                        </h2>
+                        <img class="position-absolute top-0 start-0 mt-n6 ms-n7" src="flex-assets/elements/quote-top-green.svg" alt="">
+                        <img class="position-absolute bottom-0 end-0 mb-n6 me-n7" src="flex-assets/elements/quote-down-green.svg" alt="">
+                    </div>
+                    <img class="mb-6" src="flex-assets/images/testimonials/avatar4.png" alt="">
+                    <h3 class="mb-2 fs-8 fw-semibold text-light-dark">Kevin</h3>
+                    <p class="mb-8 fs-10 text-secondary fw-medium">Co-Founder at BrightAid</p>
+                    <div class="d-inline-flex">
+                        <a class="bg-light rounded-pill" href="#" style="width: 12px; height: 12px;"></a><a class="mx-3 bg-success rounded-pill" href="#" style="width: 12px; height: 12px;"></a><a class="bg-light rounded-pill" href="#" style="width: 12px; height: 12px;"></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+        <!-- Footer Section -->
+        <section class="overflow-hidden">
+            <div class="d-flex mb-n1 text-secondary-dark">
+                <svg class="w-100" viewbox="0 0 1440 116" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1440 64.5909H1090.08C833.336 64.5909 580.229 -7.62939e-06 360 -7.62939e-06C139.771 -7.62939e-06 0 64.5909 0 64.5909V116H1440V64.5909Z" fill="#2A3342"></path>
+                </svg>
+            </div>
+            <div class="position-relative pt-20 bg-secondary-dark" style="background-image: url('flex-assets/elements/pattern-dark.png')">
+                <div class="position-absolute top-0 start-0 h-100 w-100" style="background: radial-gradient(50% 50% at 50% 50%, rgba(42, 51, 66, 0) 0%, #2A3342 100%);"></div>
+                <div class="position-relative container" style="z-index:1;">
+                    <div class="d-flex justify-content-center mb-2">
+                        <a href="index.html">
+                            <img class="img-fluid" src="images/bricongreensmallbare.png" alt="">
+                        </a>
+                    </div>
+                    <ul class="nav justify-content-center mb-5">
+                        <li class="nav-item"><a class="nav-link p-6 fs-9 link-secondary-light" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link p-6 fs-9 link-secondary-light" href="about.html">About</a></li>
+                        <li class="nav-item"><a class="nav-link p-6 fs-9 link-secondary-light" href="campaigns.html">Campaigns</a></li>
+                        <li class="nav-item"><a class="nav-link p-6 fs-9 link-secondary-light" href="#">Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="position-relative border-bottom border-light-dark" style="z-index: 1;"></div>
+                <div class="position-relative container" style="z-index: 1;">
+                    <p class="mb-0 pt-10 pb-20 fs-9 fw-medium text-center text-secondary-light">© 2024 Voltaire &amp; Kevin</p>
+                </div>
+            </div>
+        </section>
+        <!-- End of Footer Section -->
+
+
+
+
+
+    </div>
+    <script src="js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const navbarPlaceholder = document.getElementById("navbar-placeholder");
+
+            // Fetch and load the navbar
+            fetch("navbar.html")
+                .then(response => response.text())
+                .then(html => {
+                    navbarPlaceholder.innerHTML = html;
+
+                    // Initialize navbar links after loading
+                    const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+                    const loginLink = document.getElementById("loginLink");
+                    const signUpLink = document.getElementById("signUpLink");
+                    const dashboardLink = document.getElementById("dashboardLink");
+
+                    if (currentUser.email) {
+                        loginLink.textContent = `Welcome, ${currentUser.firstName?.trim() || currentUser.email || "User"}`;
+                        loginLink.href = "#";
+                        signUpLink.textContent = "Log Out";
+                        signUpLink.href = "#";
+                        signUpLink.onclick = () => {
+                            localStorage.removeItem("currentUser");
+                            window.location.href = "sign-in-page.html";
+                        };
+
+                        dashboardLink.href =
+                            currentUser.role === "Donor"
+                                ? "dashboard-donor.html"
+                                : "dashboard-student.html";
+                    }
+                })
+                .catch(error => {
+                    console.error("Failed to load navbar:", error);
+                });
+        });
+
+    </script>
+
+
+
+</body>
+</html>

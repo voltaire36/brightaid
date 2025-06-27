@@ -1,0 +1,25 @@
+# === FRONTEND ===
+node_modules/
+dist/
+build/
+
+# === BACKEND (.NET) ===
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.dbmdl
+
+# === ENV + logs ===
+.env
+*.log
+appsettings.Development.json
+
+# === OS ===
+.DS_Store
+Thumbs.db
+
+# === IDE ===
+.idea/
+.vscode/

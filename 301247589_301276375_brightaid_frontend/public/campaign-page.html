@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Campaign Details</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="shuffle-for-bootstrap.png">
+</head>
+<body>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const navbarPlaceholder = document.getElementById("navbar-placeholder");
+            if (navbarPlaceholder) {
+                fetch("navbar.html")
+                    .then(response => response.text())
+                    .then(html => {
+                        navbarPlaceholder.innerHTML = html;
+
+                        const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+                        const loginLink = document.getElementById("loginLink");
+                        const signUpLink = document.getElementById("signUpLink");
+                        const dashboardLink = document.getElementById("dashboardLink");
+
+                        if (currentUser.email) {
+                            loginLink.textContent = `Welcome, ${currentUser.firstName || currentUser.email}`;
+                            loginLink.href = "#";
+                            signUpLink.textContent = "Log Out";
+                            signUpLink.href = "#";
+                            signUpLink.onclick = () => {
+                                localStorage.removeItem("currentUser");
+                                window.location.href = "sign-in-page.html";
+                            };
+
+                            dashboardLink.href = currentUser.role === "Donor"
+                                ? "dashboard-donor.html"
+                                : "dashboard-student.html";
+                        }
+                    })
+                    .catch(error => console.error("Failed to load navbar:", error));
+            }
+
+            const queryParams = new URLSearchParams(window.location.search);
+            const studentId = queryParams.get("id");
+            let studentData = {};
+
+            if (studentId) {
+                fetch(`http://localhost:5027/api/Students/${studentId}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error("Error fetching student data");
+                        return response.json();
+                    })
+                    .then(data => {
+                        studentData = data;
+
+                        // Populate fields on the page
+                        document.getElementById("student-name").textContent = `${data.firstName || ""} ${data.lastName || ""}`;
+                        document.getElementById("student-email").textContent = `Email: ${data.email || ""}`;
+                        document.getElementById("student-phone").textContent = `Phone: ${data.phoneNumber || "Not Provided"}`;
+                        document.getElementById("student-country").textContent = `Country: ${data.countryOfOrigin || ""}`;
+                        document.getElementById("student-gender").textContent = `Gender: ${data.gender || ""}`;
+                        document.getElementById("student-institution").textContent = `Institution: ${data.institutionName || ""}`;
+                        document.getElementById("student-program").textContent = `Program: ${data.programOfStudy || ""}`;
+                        document.getElementById("student-year").textContent = `Year: ${data.yearOfStudy || ""}`;
+                        document.getElementById("student-requested-amount").textContent = `Requested Amount: $${data.requestedAmount || "0.00"}`;
+                        document.getElementById("student-story").textContent = data.financialNeedDescription || "No story available.";
+                    })
+                    .catch(error => console.error("Error fetching student data:", error));
+            } else {
+                console.error("No student ID provided in the URL.");
+            }
+
+            const donateLink = document.getElementById("donate-link");
+            if (donateLink) {
+                donateLink.addEventListener("click", () => {
+                    const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+
+                    if (!currentUser.email) {
+                        window.location.href = "sign-up-page-donor.html";
+                        return;
+                    }
+
+                    if (currentUser.role === "Student") {
+                        alert("Students cannot sponsor other students.");
+                        return;
+                    }
+
+                    if (currentUser.role === "Donor") {
+                        const confirmation = confirm(
+                            `You are about to sponsor ${studentData.firstName || "this student"} for $${studentData?.requestedAmount || "0.00"}. Do you want to proceed?`
+                        );
+
+                        if (confirmation) {
+                            const updatedStudentData = {
+                                ...studentData,
+                                hasDonor: true,
+                                donorId: currentUser.id, // Use currentUser.id
+                            };
+
+                            fetch(`http://localhost:5027/api/Students/${studentId}`, {
+                                method: "PUT",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify(updatedStudentData),
+                            })
+                                .then(response => {
+                                    if (!response.ok) throw new Error("Failed to update student data");
+
+                                    const updatedDonorData = {
+                                        studentId: studentId,
+                                        donorId: currentUser.id, // Use currentUser.id
+                                    };
+
+                                    return fetch(`http://localhost:5027/api/Donors/${currentUser.id}`, {
+                                        method: "PUT",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify(updatedDonorData),
+                                    });
+                                })
+                                .then(response => {
+                                    if (!response.ok) throw new Error("Failed to update donor data");
+                                    alert("Sponsorship successful!");
+                                    window.location.reload();
+                                })
+                                .catch(error => console.error("Error during sponsorship or donor update:", error));
+                        }
+                    }
+                });
+            }
+        });
+
+    </script>
+
+
+    <div>
+        <!-- Navbar Placeholder -->
+        <div id="navbar-placeholder"></div>
+
+        <!-- Main Section -->
+        <section class="position-relative py-28 bg-white overflow-hidden" style="background-image: url('flex-assets/elements/pattern-light.png')">
+            <div class="position-absolute top-0 start-0 h-100 w-100" style="background: radial-gradient(50% 50%, rgba(255, 255, 255, 0) 0%, rgb(255, 255, 255) 100%);"></div>
+            <div class="position-relative container" style="z-index:1;">
+                <div class="row align-items-center g-16">
+                    <div class="col-12 col-md-6">
+                        <div class="mw-md-xl">
+                            <h2 id="student-name" class="font-heading mb-8 fs-5" style="letter-spacing: -1px;">Loading...</h2>
+                            <h4 id="student-email" class="mb-4">Email: Loading...</h4>
+                            <h4 id="student-phone" class="mb-4">Phone: Loading...</h4>
+                            <h4 id="student-country" class="mb-4">Country: Loading...</h4>
+                            <h4 id="student-gender" class="mb-4">Gender: Loading...</h4>
+                            <h4 id="student-institution" class="mb-4">Institution: Loading...</h4>
+                            <h4 id="student-program" class="mb-4">Program: Loading...</h4>
+                            <h4 id="student-year" class="mb-4">Year: Loading...</h4>
+                            <h4 id="student-requested-amount" class="mb-4">Requested Amount: Loading...</h4>
+                            <p id="student-story" class="mb-6 fs-9 fw-medium text-secondary">Loading description...</p>
+                            <div class="row">
+                                <div class="col-md-auto">
+                                    <a id="donate-link" class="btn btn-lg btn-success fs-11 py-3 px-4 w-100 text-success-light shadow" href="#">Donate</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="row justify-content-center">
+                            <div class="col-auto">
+                                <div class="position-relative">
+                                    <img id="student-image" class="img-fluid" src="flex-assets/images/features/book.png" alt="Student Image">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/bootstrap/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+
+
