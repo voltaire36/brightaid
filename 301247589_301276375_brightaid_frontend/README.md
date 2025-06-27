@@ -1,7 +1,3 @@
-# The Shuffle Editor (https://shuffle.dev)
-
-NOTE: npm commands overwrite the ./public directory.
-
 ## 1. Getting Started
 
 Project's source files are placed in ./src/ directory. 
@@ -25,14 +21,5 @@ npm run watch
 # Or make production build
 npm run build
 ```
-
-## 3. Contact
-
-If you have found any bugs in the Tailwind Builder, have any questions, 
-comments or ideas for new features feel free to contact us:
-
-support@shuffle.dev
-
-## 4. Credits & Special thanks
 
 We use placeholders from https://unsplash.com/
