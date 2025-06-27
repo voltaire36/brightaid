@@ -5,7 +5,7 @@ BrightAid is a donation platform that connects international students with spons
 
 ---
 
-## 🔧 Technologies Used
+## Technologies Used
 
 - **ASP.NET Core**
 - **C#**
